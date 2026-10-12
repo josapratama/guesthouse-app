@@ -6,7 +6,7 @@ class AppConstants {
 
   // API — PostgREST berjalan di Docker
   // Android emulator gunakan 10.0.2.2 untuk akses localhost host machine
-  static const String baseUrl = 'http://10.0.2.2:3000';
+  static const String baseUrl = 'http://10.0.2.2:3001';
 
   // Storage keys
   static const String tokenKey = 'auth_token';
