@@ -47,10 +47,7 @@ class _FloorPlanScreenState extends ConsumerState<FloorPlanScreen>
         onBook: room.isAvailable
             ? () {
                 Navigator.pop(ctx);
-                context.push(
-                  AppRoutes.receptionistNewReservation,
-                  extra: room,
-                );
+                context.push(AppRoutes.receptionistNewReservation, extra: room);
               }
             : null,
       ),
@@ -82,6 +79,8 @@ class _FloorPlanScreenState extends ConsumerState<FloorPlanScreen>
       ),
       body: TabBarView(
         controller: _tabController,
+        // Nonaktifkan swipe — agar tidak konflik dengan pan di InteractiveViewer
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           _FloorPlanTab(property: 'deluxe', onRoomTap: _onRoomTap),
           _FloorPlanTab(property: 'viip', onRoomTap: _onRoomTap),
@@ -121,38 +120,40 @@ class _FloorPlanScreenState extends ConsumerState<FloorPlanScreen>
   }
 
   Widget _legendItem(String symbol, String desc) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              alignment: Alignment.center,
-              child: Text(symbol,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(width: 8),
-            Text(desc),
-          ],
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Container(
+          width: 36,
+          alignment: Alignment.center,
+          child: Text(
+            symbol,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
-      );
+        const SizedBox(width: 8),
+        Text(desc),
+      ],
+    ),
+  );
 
   Widget _colorLegend(Color color, String label) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Row(
-          children: [
-            Container(
-              width: 14,
-              height: 14,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(3),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(label, style: const TextStyle(fontSize: 13)),
-          ],
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    child: Row(
+      children: [
+        Container(
+          width: 14,
+          height: 14,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(3),
+          ),
         ),
-      );
+        const SizedBox(width: 8),
+        Text(label, style: const TextStyle(fontSize: 13)),
+      ],
+    ),
+  );
 }
 
 // ─── Tab per property ─────────────────────────────────────────
@@ -250,9 +251,7 @@ class _RoomDetailSheet extends StatelessWidget {
                   children: [
                     Text(
                       room.displayName,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
+                      style: Theme.of(context).textTheme.titleMedium
                           ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                     Text(
@@ -263,8 +262,10 @@ class _RoomDetailSheet extends StatelessWidget {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
@@ -282,15 +283,25 @@ class _RoomDetailSheet extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          _infoRow(Icons.people_outlined, 'Kapasitas', '${room.capacity} orang'),
+          _infoRow(
+            Icons.people_outlined,
+            'Kapasitas',
+            '${room.capacity} orang',
+          ),
           _infoRow(Icons.hotel_outlined, 'Tipe', room.typeLabel),
-          _infoRow(Icons.apartment_outlined, 'Properti',
-              room.property == PropertyType.deluxe
-                  ? 'Guest House Deluxe'
-                  : 'Guest House VIIP'),
+          _infoRow(
+            Icons.apartment_outlined,
+            'Properti',
+            room.property == PropertyType.deluxe
+                ? 'Guest House Deluxe'
+                : 'Guest House VIIP',
+          ),
           if (room.pricePerNight > 0)
-            _infoRow(Icons.payments_outlined, 'Harga/malam',
-                'Rp ${_formatCurrency(room.pricePerNight)}'),
+            _infoRow(
+              Icons.payments_outlined,
+              'Harga/malam',
+              'Rp ${_formatCurrency(room.pricePerNight)}',
+            ),
 
           if (room.notes != null) ...[
             const SizedBox(height: 8),
@@ -322,19 +333,23 @@ class _RoomDetailSheet extends StatelessWidget {
   }
 
   Widget _infoRow(IconData icon, String label, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: Row(
-          children: [
-            Icon(icon, size: 18, color: Colors.grey.shade600),
-            const SizedBox(width: 12),
-            Text(label,
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
-            const Spacer(),
-            Text(value,
-                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
-          ],
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Row(
+      children: [
+        Icon(icon, size: 18, color: Colors.grey.shade600),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
         ),
-      );
+        const Spacer(),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+        ),
+      ],
+    ),
+  );
 
   Color _statusColor(RoomStatus status) {
     switch (status) {
@@ -350,7 +365,9 @@ class _RoomDetailSheet extends StatelessWidget {
   }
 
   String _formatCurrency(double amount) {
-    return amount.toStringAsFixed(0).replaceAllMapped(
+    return amount
+        .toStringAsFixed(0)
+        .replaceAllMapped(
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (m) => '${m[1]}.',
         );
