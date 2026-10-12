@@ -33,12 +33,14 @@ class AuthRemoteDataSource {
 
       final user = UserModel.fromJson(data);
 
-      // Buat JWT lokal agar ApiClient bisa inject ke header berikutnya
+      // Buat JWT lokal — role harus 'anon' agar PostgREST izinkan akses
+      // Role aplikasi asli (admin/receptionist) disimpan di claim 'app_role'
       final jwt = JWT({
         'sub': user.id,
         'email': user.email,
         'name': user.name,
-        'role': user.role.name,
+        'role': 'anon', // PostgREST role
+        'app_role': user.role.name, // Role aplikasi kita
       }, issuer: 'guesthouse-app');
       final token = jwt.sign(
         SecretKey(_jwtSecret),
@@ -81,7 +83,9 @@ class AuthRemoteDataSource {
         id: payload['sub'] as String,
         name: payload['name'] as String,
         email: payload['email'] as String,
-        role: UserModel.fromJson({'role': payload['role']}).role,
+        role: UserModel.fromJson({
+          'role': payload['app_role'] ?? payload['role'],
+        }).role,
         isActive: true,
       );
     } catch (_) {
