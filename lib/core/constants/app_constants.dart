@@ -5,8 +5,9 @@ class AppConstants {
   static const String appVersion = '1.0.0';
 
   // API — PostgREST berjalan di Docker
-  // Android emulator gunakan 10.0.2.2 untuk akses localhost host machine
-  static const String baseUrl = 'http://10.0.2.2:3001';
+  // - Android Emulator (AVD): gunakan 10.0.2.2
+  // - HP Fisik: gunakan IP komputer di jaringan lokal (cek dengan ipconfig)
+  static const String baseUrl = 'http://192.168.100.11:3001';
 
   // Storage keys
   static const String tokenKey = 'auth_token';
