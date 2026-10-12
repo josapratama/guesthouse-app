@@ -11,11 +11,13 @@ class AuthRemoteDataSource {
   final ApiClient _apiClient;
   final FlutterSecureStorage _storage;
 
-  AuthRemoteDataSource(this._apiClient)
-      : _storage = const FlutterSecureStorage();
+  // Harus sama dengan PGRST_JWT_SECRET di docker-compose
+  static const _jwtSecret = 'super-secret-jwt-token-guesthouse-2026';
 
-  /// Login menggunakan email + password.
-  /// PostgREST tidak punya endpoint auth bawaan, kita buat RPC di PostgreSQL.
+  AuthRemoteDataSource(this._apiClient)
+    : _storage = const FlutterSecureStorage();
+
+  /// Login: verifikasi di PostgreSQL, buat JWT di Flutter
   Future<({UserModel user, String token})> login({
     required String email,
     required String password,
@@ -26,19 +28,21 @@ class AuthRemoteDataSource {
         data: {'email': email, 'password': password},
       );
 
+      // Response adalah user data langsung (JSON object)
       final data = response.data as Map<String, dynamic>;
-      final token = data['token'] as String;
 
-      // Decode JWT untuk ambil user info
-      final jwt = JWT.decode(token);
-      final payload = jwt.payload as Map<String, dynamic>;
+      final user = UserModel.fromJson(data);
 
-      final user = UserModel(
-        id: payload['sub'] as String,
-        name: payload['name'] as String,
-        email: payload['email'] as String,
-        role: UserModel.fromJson({'role': payload['role']}).role,
-        isActive: true,
+      // Buat JWT lokal agar ApiClient bisa inject ke header berikutnya
+      final jwt = JWT({
+        'sub': user.id,
+        'email': user.email,
+        'name': user.name,
+        'role': user.role.name,
+      }, issuer: 'guesthouse-app');
+      final token = jwt.sign(
+        SecretKey(_jwtSecret),
+        expiresIn: const Duration(hours: 8),
       );
 
       // Simpan token
@@ -46,12 +50,18 @@ class AuthRemoteDataSource {
 
       return (user: user, token: token);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
+      final statusCode = e.response?.statusCode;
+      if (statusCode == 400 || statusCode == 404) {
+        // PostgREST raise exception → 400/404
+        final msg = _extractErrorMessage(e.response?.data);
+        throw AppException(msg, statusCode: statusCode);
+      }
+      if (statusCode == 401) {
         throw const AppException('Email atau password salah', statusCode: 401);
       }
       throw AppException(
         e.message ?? 'Terjadi kesalahan jaringan',
-        statusCode: e.response?.statusCode,
+        statusCode: statusCode,
       );
     }
   }
@@ -60,7 +70,33 @@ class AuthRemoteDataSource {
     await _storage.delete(key: AppConstants.tokenKey);
   }
 
-  Future<String?> getSavedToken() async {
-    return _storage.read(key: AppConstants.tokenKey);
+  Future<UserModel?> getSavedUser() async {
+    final token = await _storage.read(key: AppConstants.tokenKey);
+    if (token == null) return null;
+
+    try {
+      final jwt = JWT.verify(token, SecretKey(_jwtSecret));
+      final payload = jwt.payload as Map<String, dynamic>;
+      return UserModel(
+        id: payload['sub'] as String,
+        name: payload['name'] as String,
+        email: payload['email'] as String,
+        role: UserModel.fromJson({'role': payload['role']}).role,
+        isActive: true,
+      );
+    } catch (_) {
+      // Token expired atau invalid — hapus
+      await _storage.delete(key: AppConstants.tokenKey);
+      return null;
+    }
+  }
+
+  String _extractErrorMessage(dynamic data) {
+    if (data == null) return 'Email atau password salah';
+    if (data is Map) {
+      return (data['message'] as String?)?.replaceAll('ERROR:  ', '') ??
+          'Email atau password salah';
+    }
+    return 'Email atau password salah';
   }
 }

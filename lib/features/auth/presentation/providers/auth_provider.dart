@@ -45,7 +45,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> _checkSavedSession() async {
-    // TODO: validasi token tersimpan saat app start
+    final user = await _dataSource.getSavedUser();
+    if (user != null) {
+      state = state.copyWith(user: user, isLoading: false);
+    }
   }
 
   Future<bool> login(String email, String password) async {
