@@ -5,19 +5,19 @@ class AppTheme {
   AppTheme._();
 
   // ─── Brand Colors ──────────────────────────────────────────
-  static const Color primary = Color(0xFF1A5276);      // Navy biru
+  static const Color primary = Color(0xFF1A5276); // Navy biru
   static const Color primaryLight = Color(0xFF2980B9);
-  static const Color secondary = Color(0xFFF39C12);    // Oranye aksen
+  static const Color secondary = Color(0xFFF39C12); // Oranye aksen
   static const Color background = Color(0xFFF5F6FA);
   static const Color surface = Colors.white;
   static const Color error = Color(0xFFE74C3C);
 
   // Room status colors (sesuai warna di denah)
-  static const Color roomAvailable = Color(0xFF2ECC71);    // Hijau
-  static const Color roomOccupied = Color(0xFFE74C3C);     // Merah
+  static const Color roomAvailable = Color(0xFF2ECC71); // Hijau
+  static const Color roomOccupied = Color(0xFFE74C3C); // Merah
   static const Color roomLongstayJapan = Color(0xFFF39C12); // Oranye
   static const Color roomLongstayLocal = Color(0xFF3498DB); // Biru
-  static const Color roomMaintenance = Color(0xFF95A5A6);   // Abu
+  static const Color roomMaintenance = Color(0xFF95A5A6); // Abu
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -27,7 +27,6 @@ class AppTheme {
         brightness: Brightness.light,
         primary: primary,
         secondary: secondary,
-        background: background,
         surface: surface,
         error: error,
       ),
@@ -48,9 +47,7 @@ class AppTheme {
           backgroundColor: primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -72,13 +69,14 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: primary, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      ),
-      cardTheme: CardTheme(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
         ),
+      ),
+      cardTheme: CardThemeData(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         color: surface,
       ),
     );

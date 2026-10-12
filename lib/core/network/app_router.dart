@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/domain/entities/user_entity.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/dashboard/presentation/screens/admin_dashboard_screen.dart';
@@ -19,7 +18,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.login,
     redirect: (context, state) {
       final isLoggedIn = authState.isAuthenticated;
-      final isLoginRoute = state.matchedLocation == AppRoutes.login ||
+      final isLoginRoute =
+          state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.splash;
 
       if (!isLoggedIn && !isLoginRoute) return AppRoutes.login;
@@ -58,9 +58,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
-      body: Center(
-        child: Text('Halaman tidak ditemukan: ${state.error}'),
-      ),
+      body: Center(child: Text('Halaman tidak ditemukan: ${state.error}')),
     ),
   );
 });

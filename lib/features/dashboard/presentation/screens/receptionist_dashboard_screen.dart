@@ -14,7 +14,6 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
     final allRoomsAsync = ref.watch(roomsProvider(null));
-    final availableAsync = ref.watch(availableRoomsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,16 +41,15 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
               // Greeting
               Text(
                 'Selamat datang,',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey.shade600,
-                    ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: Colors.grey.shade600),
               ),
               Text(
                 user?.name ?? 'Resepsionis',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primary,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primary,
+                ),
               ),
               const SizedBox(height: 24),
 
@@ -59,12 +57,15 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
               allRoomsAsync.when(
                 data: (rooms) {
                   final total = rooms.length;
-                  final occupied =
-                      rooms.where((r) => r.status.name == 'occupied').length;
-                  final longstay =
-                      rooms.where((r) => r.status.name == 'longstay').length;
-                  final available =
-                      rooms.where((r) => r.status.name == 'available').length;
+                  final occupied = rooms
+                      .where((r) => r.status.name == 'occupied')
+                      .length;
+                  final longstay = rooms
+                      .where((r) => r.status.name == 'longstay')
+                      .length;
+                  final available = rooms
+                      .where((r) => r.status.name == 'available')
+                      .length;
 
                   return GridView.count(
                     crossAxisCount: 2,
@@ -110,9 +111,8 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
               // Quick actions
               Text(
                 'Menu Cepat',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
               GridView.count(
@@ -182,7 +182,7 @@ class _StatCard extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 22),
@@ -194,10 +194,8 @@ class _StatCard extends StatelessWidget {
               children: [
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: color,
-                      ),
+                  style: Theme.of(context).textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold, color: color),
                 ),
                 Text(
                   label,

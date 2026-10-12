@@ -25,8 +25,6 @@ class _NewReservationScreenState extends ConsumerState<NewReservationScreen> {
   DateTime? _checkOut;
   RoomEntity? _selectedRoom;
 
-  final _dateFormat = DateFormat('dd MMM yyyy', 'id_ID');
-
   @override
   void initState() {
     super.initState();
@@ -45,10 +43,14 @@ class _NewReservationScreenState extends ConsumerState<NewReservationScreen> {
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
-      initialDate: isCheckIn ? (now) : (_checkIn ?? now).add(const Duration(days: 1)),
+      initialDate: isCheckIn
+          ? (now)
+          : (_checkIn ?? now).add(const Duration(days: 1)),
       firstDate: now,
       lastDate: now.add(const Duration(days: 365)),
-      helpText: isCheckIn ? 'Pilih Tanggal Check In' : 'Pilih Tanggal Check Out',
+      helpText: isCheckIn
+          ? 'Pilih Tanggal Check In'
+          : 'Pilih Tanggal Check Out',
     );
     if (picked == null) return;
     setState(() {
@@ -109,8 +111,9 @@ class _NewReservationScreenState extends ConsumerState<NewReservationScreen> {
                         labelText: 'Nama Tamu *',
                         prefixIcon: Icon(Icons.person_outline),
                       ),
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Nama tamu wajib diisi' : null,
+                      validator: (v) => v == null || v.isEmpty
+                          ? 'Nama tamu wajib diisi'
+                          : null,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
@@ -159,14 +162,17 @@ class _NewReservationScreenState extends ConsumerState<NewReservationScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppTheme.primary.withOpacity(0.08),
+                          color: AppTheme.primary.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.nights_stay_outlined,
-                                size: 18, color: AppTheme.primary),
+                            const Icon(
+                              Icons.nights_stay_outlined,
+                              size: 18,
+                              color: AppTheme.primary,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               '$_totalDays malam',
@@ -224,23 +230,23 @@ class _NewReservationScreenState extends ConsumerState<NewReservationScreen> {
   Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     // TODO: kirim data reservasi ke API
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Reservasi berhasil dibuat!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Reservasi berhasil dibuat!')));
     Navigator.pop(context);
   }
 
   Widget _sectionTitle(String title) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: AppTheme.primary,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(
+      title,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 14,
+        color: AppTheme.primary,
+      ),
+    ),
+  );
 }
 
 class _SelectedRoomInfo extends StatelessWidget {
@@ -256,7 +262,7 @@ class _SelectedRoomInfo extends StatelessWidget {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: AppTheme.primary.withOpacity(0.1),
+            color: AppTheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: const Icon(Icons.hotel, color: AppTheme.primary),
@@ -269,8 +275,10 @@ class _SelectedRoomInfo extends StatelessWidget {
               'Kamar ${room.roomNumber}',
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-            Text(room.typeLabel,
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+            Text(
+              room.typeLabel,
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+            ),
           ],
         ),
         const Spacer(),
@@ -313,9 +321,10 @@ class _DatePicker extends StatelessWidget {
               children: [
                 Icon(icon, size: 16, color: AppTheme.primary),
                 const SizedBox(width: 4),
-                Text(label,
-                    style: TextStyle(
-                        fontSize: 11, color: Colors.grey.shade600)),
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                ),
               ],
             ),
             const SizedBox(height: 4),

@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/network/api_client.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
-import '../../data/models/user_model.dart';
 import '../../domain/entities/user_entity.dart';
 
 // ─── Providers ────────────────────────────────────────────────

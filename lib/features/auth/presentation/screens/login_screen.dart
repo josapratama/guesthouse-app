@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../domain/entities/user_entity.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -29,10 +28,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _onLogin() async {
     if (!_formKey.currentState!.validate()) return;
-    final success = await ref.read(authProvider.notifier).login(
-          _emailCtrl.text.trim(),
-          _passwordCtrl.text,
-        );
+    final success = await ref
+        .read(authProvider.notifier)
+        .login(_emailCtrl.text.trim(), _passwordCtrl.text);
     if (success && mounted) {
       final user = ref.read(authProvider).user!;
       if (user.isAdmin) {
@@ -64,25 +62,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     color: AppTheme.primary,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Icon(
-                    Icons.hotel,
-                    color: Colors.white,
-                    size: 40,
-                  ),
+                  child: const Icon(Icons.hotel, color: Colors.white, size: 40),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   'Guest House App',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: AppTheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   'Wisma Eucaliptus Deluxe & VIIP',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey.shade600,
-                      ),
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: Colors.grey.shade600),
                 ),
                 const SizedBox(height: 40),
 
@@ -97,9 +90,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           Text(
                             'Masuk',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
+                            style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 20),
@@ -113,8 +104,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               prefixIcon: Icon(Icons.email_outlined),
                             ),
                             validator: (v) {
-                              if (v == null || v.isEmpty) return 'Email wajib diisi';
-                              if (!v.contains('@')) return 'Format email tidak valid';
+                              if (v == null || v.isEmpty) {
+                                return 'Email wajib diisi';
+                              }
+                              if (!v.contains('@')) {
+                                return 'Format email tidak valid';
+                              }
                               return null;
                             },
                           ),
@@ -134,12 +129,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       : Icons.visibility_off_outlined,
                                 ),
                                 onPressed: () => setState(
-                                    () => _obscurePassword = !_obscurePassword),
+                                  () => _obscurePassword = !_obscurePassword,
+                                ),
                               ),
                             ),
                             validator: (v) {
-                              if (v == null || v.isEmpty) return 'Password wajib diisi';
-                              if (v.length < 6) return 'Password minimal 6 karakter';
+                              if (v == null || v.isEmpty) {
+                                return 'Password wajib diisi';
+                              }
+                              if (v.length < 6) {
+                                return 'Password minimal 6 karakter';
+                              }
                               return null;
                             },
                           ),
@@ -150,21 +150,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: AppTheme.error.withOpacity(0.1),
+                                color: AppTheme.error.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                    color: AppTheme.error.withOpacity(0.3)),
+                                  color: AppTheme.error.withValues(alpha: 0.3),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.error_outline,
-                                      color: AppTheme.error, size: 18),
+                                  Icon(
+                                    Icons.error_outline,
+                                    color: AppTheme.error,
+                                    size: 18,
+                                  ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       authState.error!,
                                       style: TextStyle(
-                                          color: AppTheme.error, fontSize: 13),
+                                        color: AppTheme.error,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ),
                                 ],

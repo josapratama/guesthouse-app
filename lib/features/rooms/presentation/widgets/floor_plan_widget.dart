@@ -131,7 +131,7 @@ class _FloorPlanWidgetState extends State<FloorPlanWidget> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: AppTheme.primary.withOpacity(0.15),
+            color: AppTheme.primary.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
@@ -220,15 +220,15 @@ class _RoomCell extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: color.withOpacity(isSelected ? 1.0 : 0.85),
+            color: color.withValues(alpha: isSelected ? 1.0 : 0.85),
             borderRadius: BorderRadius.circular(6),
             border: isSelected
                 ? Border.all(color: Colors.white, width: 2.5)
-                : Border.all(color: color.withOpacity(0.5), width: 1),
+                : Border.all(color: color.withValues(alpha: 0.5), width: 1),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: color.withOpacity(0.6),
+                      color: color.withValues(alpha: 0.6),
                       blurRadius: 8,
                       spreadRadius: 1,
                     )
